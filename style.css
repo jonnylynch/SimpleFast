@@ -100,7 +100,7 @@
 
 /* Current stage — green pulse */
 .status-card.status-current {
-  border-color: #22c55e;
+  border-color: #22c55e !important;
   box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
   animation: greenPulse 2.5s ease-in-out infinite;
 }
