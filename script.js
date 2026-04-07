@@ -140,7 +140,10 @@ function updateDots(index) {
 
 function updateCarouselCurrent(statusIndex) {
   document.querySelectorAll('.status-card').forEach((card, i) => {
-    card.classList.toggle('status-current', i === statusIndex);
+    const isActive = i === statusIndex;
+    card.classList.toggle('status-current', isActive);
+    // Remove stage border class when current so green pulse is the only border
+    card.classList.toggle(STATUSES[i].cls, !isActive);
   });
 
   if (statusIndex !== activeStatusIndex) {
