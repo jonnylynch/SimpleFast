@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-950 text-white min-h-screen flex flex-col items-center justify-between py-5 px-4">
+<body class="bg-gray-950 text-white min-h-screen flex flex-col items-center py-5 px-4">
 
   <!-- Top section: header + ring + carousel + banners -->
   <div class="flex flex-col items-center gap-4 w-full max-w-sm">
@@ -57,8 +57,8 @@
 
   </div>
 
-  <!-- Bottom controls — always anchored to the bottom -->
-  <div class="w-full max-w-sm flex flex-col gap-3 mt-4">
+  <!-- Bottom controls — pushed to bottom via mt-auto -->
+  <div class="w-full max-w-sm flex flex-col gap-3 mt-auto pt-4">
 
     <div class="grid grid-cols-4 gap-2" id="goalButtons">
       <button onclick="selectGoal(12)" class="goal-btn" data-hours="12">12:12</button>
