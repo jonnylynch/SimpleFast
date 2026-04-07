@@ -47,63 +47,38 @@ function dismissIos() {
 
 // ── Constants ──
 const STORAGE_KEY = 'simplefast_state';
-const CIRCUMFERENCE = 603; // 2 * Math.PI * 96
+const CIRCUMFERENCE = 603;
 
 const STATUSES = [
   {
-    index: 0,
-    minHours: 0,
-    maxHours: 4,
-    emoji: '🍽️',
-    label: 'Anabolic State',
+    index: 0, minHours: 0, maxHours: 4,
+    emoji: '🍽️', label: 'Anabolic State',
     desc: 'Blood sugar is rising as your body processes your last meal.',
-    cls: 'stage-anabolic',
-    ringColor: '#3b82f6',
-    range: '0 – 4 hrs',
+    cls: 'stage-anabolic', ringColor: '#3b82f6', range: '0 – 4 hrs',
   },
   {
-    index: 1,
-    minHours: 4,
-    maxHours: 12,
-    emoji: '🔋',
-    label: 'Catabolic State',
+    index: 1, minHours: 4, maxHours: 12,
+    emoji: '🔋', label: 'Catabolic State',
     desc: 'Blood sugar is dropping; your body starts using stored glycogen.',
-    cls: 'stage-catabolic',
-    ringColor: '#a855f7',
-    range: '4 – 12 hrs',
+    cls: 'stage-catabolic', ringColor: '#a855f7', range: '4 – 12 hrs',
   },
   {
-    index: 2,
-    minHours: 12,
-    maxHours: 16,
-    emoji: '🔥',
-    label: 'Fat Burning & Trace Ketosis',
+    index: 2, minHours: 12, maxHours: 16,
+    emoji: '🔥', label: 'Fat Burning & Trace Ketosis',
     desc: 'First trace ketones appear as liver glycogen depletes. Your body is entering the metabolic switch — burning fat for fuel.',
-    cls: 'stage-fat',
-    ringColor: '#f59e0b',
-    range: '12 – 16 hrs',
+    cls: 'stage-fat', ringColor: '#f59e0b', range: '12 – 16 hrs',
   },
   {
-    index: 3,
-    minHours: 16,
-    maxHours: 24,
-    emoji: '⚡',
-    label: 'Ketosis & Repair',
+    index: 3, minHours: 16, maxHours: 24,
+    emoji: '⚡', label: 'Ketosis & Repair',
     desc: 'High fat-burning mode. Autophagy (cellular cleanup) has begun.',
-    cls: 'stage-ketosis',
-    ringColor: '#10b981',
-    range: '16 – 24 hrs',
+    cls: 'stage-ketosis', ringColor: '#10b981', range: '16 – 24 hrs',
   },
   {
-    index: 4,
-    minHours: 24,
-    maxHours: Infinity,
-    emoji: '🧬',
-    label: 'Deep Autophagy',
+    index: 4, minHours: 24, maxHours: Infinity,
+    emoji: '🧬', label: 'Deep Autophagy',
     desc: 'Peak cellular regeneration and growth hormone spike.',
-    cls: 'stage-deep',
-    ringColor: '#06b6d4',
-    range: '24 hrs+',
+    cls: 'stage-deep', ringColor: '#06b6d4', range: '24 hrs+',
   },
 ];
 
@@ -130,6 +105,14 @@ function formatTime(totalSeconds) {
   const m = Math.floor((totalSeconds % 3600) / 60);
   const s = totalSeconds % 60;
   return [h, m, s].map(n => String(n).padStart(2, '0')).join(':');
+}
+
+function formatDuration(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
 }
 
 // ── Build carousel ──
@@ -159,7 +142,6 @@ function buildCarousel() {
     dots.appendChild(dot);
   });
 
-  // Sync dots on manual scroll
   document.getElementById('statusCarousel').addEventListener('scroll', onCarouselScroll, { passive: true });
 }
 
@@ -185,7 +167,6 @@ function updateCarouselCurrent(statusIndex) {
   document.querySelectorAll('.status-card').forEach((card, i) => {
     const isActive = i === statusIndex;
     card.classList.toggle('status-current', isActive);
-    // Remove stage border class when current so green pulse is the only border
     card.classList.toggle(STATUSES[i].cls, !isActive);
   });
 
@@ -249,7 +230,7 @@ function selectGoal(hours) {
   updateUI(0, hours, false);
 }
 
-// ── Action button (start or open modal) ──
+// ── Start ──
 function handleActionBtn() {
   const state = loadState();
   if (state && state.isActive) {
@@ -267,7 +248,6 @@ function startFast() {
   const startTime = new Date(Date.now() - offsetMs).toISOString();
 
   saveState({ startTime, targetHours: selectedGoal, isActive: true });
-
   document.getElementById('offsetRow').style.display = 'none';
 
   clearInterval(tickInterval);
@@ -275,8 +255,13 @@ function startFast() {
   tick();
 }
 
-// ── Modal ──
+// ── End fast modal ──
 function openModal() {
+  // Reset ate panel
+  document.getElementById('ateInput').value = 0;
+  document.getElementById('ateLabel').textContent = '0 min ago';
+  document.getElementById('atePanel').classList.add('hidden');
+  document.getElementById('ateChevron').style.transform = '';
   document.getElementById('confirmModal').classList.remove('hidden');
 }
 
@@ -284,16 +269,49 @@ function closeModal() {
   document.getElementById('confirmModal').classList.add('hidden');
 }
 
+function toggleAtePanel() {
+  const panel = document.getElementById('atePanel');
+  const chevron = document.getElementById('ateChevron');
+  const open = panel.classList.toggle('hidden');
+  chevron.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function updateAteLabel(minutes) {
+  const m = parseInt(minutes);
+  const h = Math.floor(m / 60);
+  const mins = m % 60;
+  let label;
+  if (m === 0)         label = '0 min ago';
+  else if (h === 0)    label = `${mins} min ago`;
+  else if (mins === 0) label = `${h} hr ago`;
+  else                 label = `${h} hr ${mins} min ago`;
+  document.getElementById('ateLabel').textContent = label;
+}
+
 function confirmEndFast() {
+  const state = loadState();
   closeModal();
+
+  // Calculate actual end time (backdated if "I already ate" was used)
+  const ateMins = parseFloat(document.getElementById('ateInput').value) || 0;
+  const ateOffsetMs = ateMins * 60 * 1000;
+  const effectiveEndTime = Date.now() - ateOffsetMs;
+  const startTime = new Date(state.startTime).getTime();
+  const actualSeconds = Math.max(0, Math.floor((effectiveEndTime - startTime) / 1000));
+  const targetSeconds = state.targetHours * 3600;
+
+  // Stop timer and clear state
   clearInterval(tickInterval);
   clearState();
   selectedGoal = null;
   activeStatusIndex = -1;
 
+  // Reset main UI
   document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.status-card').forEach(c => c.classList.remove('status-current'));
-
+  document.querySelectorAll('.status-card').forEach((c, i) => {
+    c.classList.remove('status-current');
+    c.classList.add(STATUSES[i].cls);
+  });
   document.getElementById('timerDisplay').textContent = '00:00:00';
   document.getElementById('goalLabel').textContent = 'No active fast';
   document.getElementById('progressRing').style.strokeDashoffset = CIRCUMFERENCE;
@@ -312,9 +330,51 @@ function confirmEndFast() {
 
   scrollToCard(0, false);
   updateDots(0);
+
+  // Show result
+  showResult(actualSeconds, targetSeconds, state.targetHours);
 }
 
-// ── Offset panel ──
+// ── Result modal ──
+function showResult(actualSeconds, targetSeconds, targetHours) {
+  const ratio = actualSeconds / targetSeconds;
+  const stageIndex = getStatusIndex(actualSeconds / 3600);
+  const stage = STATUSES[stageIndex];
+  const durationStr = formatDuration(actualSeconds);
+
+  let emoji, heading, message;
+
+  if (ratio >= 1) {
+    emoji = '🏆';
+    heading = 'Goal crushed!';
+    message = `You hit your ${targetHours}h target and reached ${stage.label}. Your body was working hard — great discipline.`;
+  } else if (ratio >= 0.75) {
+    emoji = '💪';
+    heading = 'So close!';
+    message = `You made it to ${stage.label}. Just a bit more next time and you'll hit that ${targetHours}h goal.`;
+  } else if (ratio >= 0.5) {
+    emoji = '👊';
+    heading = 'Good effort!';
+    message = `You reached ${stage.label}. Every fast builds the habit — you'll go further next time.`;
+  } else {
+    emoji = '🌱';
+    heading = 'Every fast counts.';
+    message = `You reached ${stage.label}. Short fasts still benefit your body. Keep showing up.`;
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultHeading').textContent = heading;
+  document.getElementById('resultDuration').textContent = durationStr;
+  document.getElementById('resultStage').textContent = stage.label;
+  document.getElementById('resultMessage').textContent = message;
+  document.getElementById('resultModal').classList.remove('hidden');
+}
+
+function closeResultModal() {
+  document.getElementById('resultModal').classList.add('hidden');
+}
+
+// ── Offset panel (start) ──
 function toggleOffsetPanel() {
   const panel = document.getElementById('offsetPanel');
   const chevron = document.getElementById('offsetChevron');
