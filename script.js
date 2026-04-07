@@ -101,8 +101,9 @@ function buildCarousel() {
     const card = document.createElement('div');
     card.className = `status-card ${s.cls}`;
     card.id = `status-card-${i}`;
+    const emojiClass = `emoji-${s.cls.replace('stage-', '')}`;
     card.innerHTML = `
-      <div class="text-3xl mb-1">${s.emoji}</div>
+      <div class="text-3xl mb-1"><span class="${emojiClass}">${s.emoji}</span></div>
       <div class="text-xs text-gray-500 mb-1">${s.range}</div>
       <div class="text-base font-semibold text-white">${s.label}</div>
       <div class="text-xs text-gray-400 mt-1 leading-relaxed">${s.desc}</div>
