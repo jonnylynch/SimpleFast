@@ -29,6 +29,10 @@ let installPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   installPrompt = e;
+  const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+  document.getElementById('installBannerText').textContent = isMobile
+    ? 'Add SimpleFast to your home screen.'
+    : 'Install SimpleFast as a desktop app.';
   document.getElementById('installBanner').classList.remove('hidden');
 });
 

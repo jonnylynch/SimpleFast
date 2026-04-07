@@ -9,89 +9,99 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-950 text-white flex flex-col items-center py-5 px-4 gap-4">
+<body class="bg-gray-950 text-white min-h-screen">
 
-  <!-- Top section: header + ring + carousel + banners -->
-  <div class="flex flex-col items-center gap-4 w-full max-w-sm">
+  <div class="app-shell">
 
-    <h1 class="text-2xl font-bold tracking-widest text-gray-400 uppercase">SimpleFast</h1>
+    <!-- Title -->
+    <h1 class="text-2xl font-bold tracking-widest text-gray-400 uppercase text-center">SimpleFast</h1>
 
-    <!-- Timer Ring -->
-    <div class="relative flex items-center justify-center">
-      <svg viewBox="0 0 220 220" width="200" height="200">
-        <circle class="ring-bg" cx="110" cy="110" r="96" />
-        <circle id="progressRing" class="ring-fill" cx="110" cy="110" r="96" />
-      </svg>
-      <div class="absolute text-center">
-        <div id="timerDisplay" class="text-5xl font-mono font-bold tracking-tight">00:00:00</div>
-        <div id="goalLabel" class="text-sm text-gray-500 mt-1">No active fast</div>
-      </div>
-    </div>
+    <!-- Main content: stacked on mobile, side-by-side on desktop -->
+    <div class="main-content">
 
-    <!-- Status Carousel -->
-    <div class="w-full flex flex-col gap-2">
-      <div id="statusCarousel" class="status-carousel"></div>
-      <div id="carouselDots" class="flex justify-center gap-2 mt-1"></div>
-    </div>
-
-    <!-- Update available banner -->
-    <div id="updateBanner" class="install-banner hidden">
-      <span class="install-banner-text">A new version is available.</span>
-      <button class="install-banner-btn" onclick="applyUpdate()">Update</button>
-    </div>
-
-    <!-- Android install banner -->
-    <div id="installBanner" class="install-banner hidden">
-      <span class="install-banner-text">Add SimpleFast to your home screen.</span>
-      <button class="install-banner-btn" onclick="triggerInstall()">Install</button>
-      <button class="install-banner-dismiss" onclick="dismissInstall()" aria-label="Dismiss">✕</button>
-    </div>
-
-    <!-- iOS install hint -->
-    <div id="iosBanner" class="ios-banner hidden">
-      <div class="ios-banner-body">
-        <span>Install — tap</span>
-        <svg class="ios-share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-          <polyline points="16 6 12 2 8 6"/>
-          <line x1="12" y1="2" x2="12" y2="15"/>
-        </svg>
-        <span>then <strong>Add to Home Screen</strong></span>
-      </div>
-      <button class="install-banner-dismiss" onclick="dismissIos()" aria-label="Dismiss">✕</button>
-    </div>
-
-  </div>
-
-  <!-- Controls -->
-  <div class="w-full max-w-sm flex flex-col gap-3">
-
-    <div class="grid grid-cols-4 gap-2" id="goalButtons">
-      <button onclick="selectGoal(12)" class="goal-btn" data-hours="12">12:12</button>
-      <button onclick="selectGoal(14)" class="goal-btn" data-hours="14">14:10</button>
-      <button onclick="selectGoal(16)" class="goal-btn" data-hours="16">16:8</button>
-      <button onclick="selectGoal(24)" class="goal-btn" data-hours="24">24h</button>
-    </div>
-
-    <div id="offsetRow" class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-      <button onclick="toggleOffsetPanel()" class="w-full relative flex items-center justify-center px-4 py-3 text-sm font-semibold text-amber-400 hover:bg-gray-800 transition-colors">
-        <span>I already started!</span>
-        <span id="offsetChevron" class="absolute right-4 text-gray-500 transition-transform duration-200">▼</span>
-      </button>
-      <div id="offsetPanel" class="hidden px-4 pb-4 pt-1 flex flex-col gap-2">
-        <div class="flex justify-between items-center">
-          <span class="text-xs text-gray-500">0 hr</span>
-          <span id="offsetLabel" class="text-sm font-semibold text-amber-400">0 min ago</span>
-          <span class="text-xs text-gray-500">24 hrs</span>
+      <!-- Left: Timer Ring -->
+      <div class="ring-panel">
+        <div class="relative flex items-center justify-center">
+          <svg viewBox="0 0 220 220" class="ring-svg-size">
+            <circle class="ring-bg" cx="110" cy="110" r="96" />
+            <circle id="progressRing" class="ring-fill" cx="110" cy="110" r="96" />
+          </svg>
+          <div class="absolute text-center">
+            <div id="timerDisplay" class="timer-text font-mono font-bold tracking-tight">00:00:00</div>
+            <div id="goalLabel" class="text-sm text-gray-500 mt-1">No active fast</div>
+          </div>
         </div>
-        <input id="offsetInput" type="range" min="0" max="1440" step="1" value="0"
-          oninput="updateOffsetLabel(this.value)" class="offset-slider w-full" />
+      </div>
+
+      <!-- Right: Status Carousel -->
+      <div class="carousel-panel">
+        <div id="statusCarousel" class="status-carousel"></div>
+        <div id="carouselDots" class="flex justify-center gap-2 mt-2"></div>
+      </div>
+
+    </div>
+
+    <!-- Banners -->
+    <div class="banners-panel">
+      <div id="updateBanner" class="install-banner hidden">
+        <span class="install-banner-text">A new version is available.</span>
+        <button class="install-banner-btn" onclick="applyUpdate()">Update</button>
+      </div>
+
+      <div id="installBanner" class="install-banner hidden">
+        <span id="installBannerText" class="install-banner-text">Add SimpleFast to your home screen.</span>
+        <button class="install-banner-btn" onclick="triggerInstall()">Install</button>
+        <button class="install-banner-dismiss" onclick="dismissInstall()" aria-label="Dismiss">✕</button>
+      </div>
+
+      <div id="iosBanner" class="ios-banner hidden">
+        <div class="ios-banner-body">
+          <span>Install — tap</span>
+          <svg class="ios-share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+          <span>then <strong>Add to Home Screen</strong></span>
+        </div>
+        <button class="install-banner-dismiss" onclick="dismissIos()" aria-label="Dismiss">✕</button>
       </div>
     </div>
 
-    <button id="actionBtn" onclick="handleActionBtn()" class="action-btn" disabled>
-      Select a Goal
-    </button>
+    <!-- Controls -->
+    <div class="controls-panel">
+
+      <!-- Goal buttons + action button: row on desktop -->
+      <div class="goal-action-row">
+        <div class="grid grid-cols-4 gap-2 flex-1" id="goalButtons">
+          <button onclick="selectGoal(12)" class="goal-btn" data-hours="12">12:12</button>
+          <button onclick="selectGoal(14)" class="goal-btn" data-hours="14">14:10</button>
+          <button onclick="selectGoal(16)" class="goal-btn" data-hours="16">16:8</button>
+          <button onclick="selectGoal(24)" class="goal-btn" data-hours="24">24h</button>
+        </div>
+        <button id="actionBtn" onclick="handleActionBtn()" class="action-btn action-btn-desktop" disabled>
+          Select a Goal
+        </button>
+      </div>
+
+      <!-- Offset row -->
+      <div id="offsetRow" class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+        <button onclick="toggleOffsetPanel()" class="w-full relative flex items-center justify-center px-4 py-3 text-sm font-semibold text-amber-400 hover:bg-gray-800 transition-colors">
+          <span>I already started!</span>
+          <span id="offsetChevron" class="absolute right-4 text-gray-500 transition-transform duration-200">▼</span>
+        </button>
+        <div id="offsetPanel" class="hidden px-4 pb-4 pt-1 flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">0 hr</span>
+            <span id="offsetLabel" class="text-sm font-semibold text-amber-400">0 min ago</span>
+            <span class="text-xs text-gray-500">24 hrs</span>
+          </div>
+          <input id="offsetInput" type="range" min="0" max="1440" step="1" value="0"
+            oninput="updateOffsetLabel(this.value)" class="offset-slider w-full" />
+        </div>
+      </div>
+
+    </div>
 
   </div>
 
@@ -101,8 +111,6 @@
       <div class="text-5xl mb-3">⏹️</div>
       <h2 class="text-2xl font-bold mb-1">End your fast?</h2>
       <p class="text-sm text-gray-400 mb-4 leading-relaxed">Your timer will stop and progress will reset.</p>
-
-      <!-- "I already ate" offset -->
       <div class="w-full bg-gray-800 border border-gray-700 rounded-xl overflow-hidden mb-6">
         <button onclick="toggleAtePanel()" class="w-full relative flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-amber-400 hover:bg-gray-700 transition-colors">
           <span>I already ate!</span>
@@ -118,7 +126,6 @@
             oninput="updateAteLabel(this.value)" class="offset-slider w-full" />
         </div>
       </div>
-
       <button onclick="confirmEndFast()" class="modal-btn-end">Yes, end it</button>
       <button onclick="closeModal()" class="modal-btn-cancel">Keep going</button>
     </div>
