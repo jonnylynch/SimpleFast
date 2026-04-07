@@ -115,9 +115,14 @@
   }
 }
 
-/* ── Emoji animations ── */
-.emoji-anabolic {
-  display: inline-block;
+/* ── Emoji animations — only active on the current stage card ── */
+.emoji-anabolic,
+.emoji-catabolic,
+.emoji-fat,
+.emoji-ketosis,
+.emoji-deep { display: inline-block; }
+
+.status-card.status-current .emoji-anabolic {
   animation: bobAnabolic 3s ease-in-out infinite;
 }
 @keyframes bobAnabolic {
@@ -125,8 +130,7 @@
   50%      { transform: translateY(-5px); }
 }
 
-.emoji-catabolic {
-  display: inline-block;
+.status-card.status-current .emoji-catabolic {
   animation: drainCatabolic 2s ease-in-out infinite;
 }
 @keyframes drainCatabolic {
@@ -134,8 +138,7 @@
   50%      { opacity: 0.4; transform: scale(0.88); }
 }
 
-.emoji-fat {
-  display: inline-block;
+.status-card.status-current .emoji-fat {
   transform-origin: center bottom;
   animation: flickerFat 0.65s ease-in-out infinite;
 }
@@ -148,8 +151,7 @@
   100% { transform: scale(1)    rotate(-2deg); opacity: 1; }
 }
 
-.emoji-ketosis {
-  display: inline-block;
+.status-card.status-current .emoji-ketosis {
   animation: zapKetosis 1.4s ease-in-out infinite;
 }
 @keyframes zapKetosis {
@@ -160,8 +162,7 @@
   50%      { transform: scale(1);    filter: brightness(1); }
 }
 
-.emoji-deep {
-  display: inline-block;
+.status-card.status-current .emoji-deep {
   animation: spinDeep 5s linear infinite;
 }
 @keyframes spinDeep {
