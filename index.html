@@ -71,17 +71,12 @@
     <!-- Controls -->
     <div class="controls-panel">
 
-      <!-- Goal buttons + action button: row on desktop -->
-      <div class="goal-action-row">
-        <div class="grid grid-cols-4 gap-2 flex-1" id="goalButtons">
-          <button onclick="selectGoal(12)" class="goal-btn" data-hours="12">12:12</button>
-          <button onclick="selectGoal(14)" class="goal-btn" data-hours="14">14:10</button>
-          <button onclick="selectGoal(16)" class="goal-btn" data-hours="16">16:8</button>
-          <button onclick="selectGoal(24)" class="goal-btn" data-hours="24">24h</button>
-        </div>
-        <button id="actionBtn" onclick="handleActionBtn()" class="action-btn action-btn-desktop" disabled>
-          Select a Goal
-        </button>
+      <!-- Goal buttons -->
+      <div class="grid grid-cols-4 gap-2" id="goalButtons">
+        <button onclick="selectGoal(12)" class="goal-btn" data-hours="12">12:12</button>
+        <button onclick="selectGoal(14)" class="goal-btn" data-hours="14">14:10</button>
+        <button onclick="selectGoal(16)" class="goal-btn" data-hours="16">16:8</button>
+        <button onclick="selectGoal(24)" class="goal-btn" data-hours="24">24h</button>
       </div>
 
       <!-- Offset row -->
@@ -100,6 +95,11 @@
             oninput="updateOffsetLabel(this.value)" class="offset-slider w-full" />
         </div>
       </div>
+
+      <!-- Action button — always at the bottom -->
+      <button id="actionBtn" onclick="handleActionBtn()" class="action-btn" disabled>
+        Select a Goal
+      </button>
 
     </div>
 
