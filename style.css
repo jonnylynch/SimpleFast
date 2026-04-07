@@ -83,16 +83,16 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   gap: 12px;
-  padding: 4px 2px 8px;
+  padding: 6px 6px 10px;
 }
 .status-carousel::-webkit-scrollbar { display: none; }
 
 .status-card {
-  flex: 0 0 100%;
+  flex: 0 0 calc(100% - 4px);
   scroll-snap-align: center;
   background-color: #111827;
   border: 2px solid #1f2937;
-  border-radius: 1.25rem;
+  border-radius: 1.5rem;
   padding: 1.1rem 1rem;
   text-align: center;
   transition: border-color 0.4s;
