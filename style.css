@@ -288,7 +288,7 @@
 /* ── PWA install banner ── */
 .install-banner {
   width: 100%;
-  max-width: 480px;
+  max-width: 100%;
   background: #1f2937;
   border: 1px solid #374151;
   border-radius: 1rem;
@@ -321,7 +321,7 @@
 /* ── iOS install hint ── */
 .ios-banner {
   width: 100%;
-  max-width: 480px;
+  max-width: 100%;
   background: #1f2937;
   border: 1px solid #374151;
   border-radius: 1rem;
