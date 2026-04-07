@@ -272,7 +272,7 @@ function startFast() {
   const startTime = new Date(Date.now() - offsetMs).toISOString();
 
   saveState({ startTime, targetHours: selectedGoal, isActive: true });
-  document.getElementById('offsetRow').style.visibility = 'hidden';
+  document.getElementById('offsetRow').classList.add('collapsed');
 
   clearInterval(tickInterval);
   tickInterval = setInterval(tick, 1000);
@@ -350,7 +350,7 @@ function confirmEndFast() {
   document.getElementById('offsetLabel').textContent = '0 min ago';
   document.getElementById('offsetPanel').classList.add('hidden');
   document.getElementById('offsetChevron').style.transform = '';
-  document.getElementById('offsetRow').style.visibility = '';
+  document.getElementById('offsetRow').classList.remove('collapsed');
 
   scrollToCard(0, false);
   updateDots(0);
@@ -428,7 +428,7 @@ function init() {
     document.querySelectorAll('.goal-btn').forEach(btn => {
       btn.classList.toggle('active', parseInt(btn.dataset.hours) === selectedGoal);
     });
-    document.getElementById('offsetRow').style.visibility = 'hidden';
+    document.getElementById('offsetRow').classList.add('collapsed');
     tickInterval = setInterval(tick, 1000);
     tick();
   } else {
