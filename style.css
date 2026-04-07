@@ -260,6 +260,38 @@
   white-space: nowrap;
 }
 
+/* ── iOS install hint ── */
+.ios-banner {
+  width: 100%;
+  max-width: 480px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.ios-banner.hidden { display: none; }
+
+.ios-banner-body {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  flex: 1;
+}
+
+.ios-share-icon {
+  width: 16px;
+  height: 16px;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
 .install-banner-dismiss {
   background: none;
   border: none;

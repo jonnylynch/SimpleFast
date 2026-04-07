@@ -30,6 +30,21 @@ function dismissInstall() {
   document.getElementById('installBanner').classList.add('hidden');
 }
 
+// ── iOS install hint ──
+(function () {
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = sessionStorage.getItem('ios_hint_dismissed');
+  if (isIos && !isStandalone && !dismissed) {
+    document.getElementById('iosBanner').classList.remove('hidden');
+  }
+})();
+
+function dismissIos() {
+  document.getElementById('iosBanner').classList.add('hidden');
+  sessionStorage.setItem('ios_hint_dismissed', '1');
+}
+
 // ── Constants ──
 const STORAGE_KEY = 'simplefast_state';
 const CIRCUMFERENCE = 603; // 2 * Math.PI * 96
