@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimpleFast – DIY Fasting Tracker</title>
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex flex-col items-center justify-between py-8 px-4">
+
+  <!-- Timer Ring -->
+  <div class="flex flex-col items-center gap-4 w-full">
+    <h1 class="text-2xl font-bold tracking-widest text-gray-400 uppercase">SimpleFast</h1>
+
+    <div class="relative flex items-center justify-center mt-2">
+      <svg class="ring-svg" viewBox="0 0 220 220" width="220" height="220">
+        <circle class="ring-bg" cx="110" cy="110" r="96" />
+        <circle id="progressRing" class="ring-fill" cx="110" cy="110" r="96" />
+      </svg>
+      <div class="absolute text-center">
+        <div id="timerDisplay" class="text-5xl font-mono font-bold tracking-tight">00:00:00</div>
+        <div id="goalLabel" class="text-sm text-gray-500 mt-1">No active fast</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body Status Card -->
+  <div id="statusCard" class="w-full max-w-sm bg-gray-900 border border-gray-800 rounded-2xl p-5 text-center mt-6">
+    <div id="statusEmoji" class="text-4xl mb-2">⏳</div>
+    <div id="statusLabel" class="text-xl font-semibold text-amber-400">Select a goal</div>
+    <div id="statusDesc" class="text-sm text-gray-400 mt-2 leading-relaxed">Choose your fasting window below to get started.</div>
+  </div>
+
+  <!-- Goal Buttons + Controls -->
+  <div class="w-full max-w-sm flex flex-col gap-4 mt-6">
+    <div class="grid grid-cols-4 gap-2" id="goalButtons">
+      <button onclick="selectGoal(12)"  class="goal-btn" data-hours="12">12:12</button>
+      <button onclick="selectGoal(14)"  class="goal-btn" data-hours="14">14:10</button>
+      <button onclick="selectGoal(16)"  class="goal-btn" data-hours="16">16:8</button>
+      <button onclick="selectGoal(24)"  class="goal-btn" data-hours="24">24h</button>
+    </div>
+
+    <!-- Collapsible offset panel -->
+    <div id="offsetRow" class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+      <button onclick="toggleOffsetPanel()" class="w-full relative flex items-center justify-center px-4 py-3 text-sm font-semibold text-amber-400 hover:bg-gray-800 transition-colors">
+        <span>I already started!</span>
+        <span id="offsetChevron" class="absolute right-4 text-gray-500 transition-transform duration-200">▼</span>
+      </button>
+      <div id="offsetPanel" class="hidden px-4 pb-4 pt-1 flex flex-col gap-2">
+        <div class="flex justify-between items-center">
+          <span class="text-xs text-gray-500">0 hr</span>
+          <span id="offsetLabel" class="text-sm font-semibold text-amber-400">0 min ago</span>
+          <span class="text-xs text-gray-500">24 hrs</span>
+        </div>
+        <input
+          id="offsetInput"
+          type="range"
+          min="0"
+          max="1440"
+          step="1"
+          value="0"
+          oninput="updateOffsetLabel(this.value)"
+          class="offset-slider w-full"
+        />
+      </div>
+    </div>
+
+    <button id="actionBtn" onclick="toggleFast()" class="action-btn">
+      Start Fast
+    </button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
