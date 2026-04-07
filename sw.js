@@ -9,6 +9,10 @@ const ASSETS = [
   '/icon-512.png',
 ];
 
+self.addEventListener('message', e => {
+  if (e.data?.action === 'skipWaiting') self.skipWaiting();
+});
+
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(cache =>
@@ -16,7 +20,6 @@ self.addEventListener('install', e => {
       Promise.allSettled(ASSETS.map(url => cache.add(url)))
     )
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {

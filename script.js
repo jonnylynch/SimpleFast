@@ -1,6 +1,26 @@
-// ── Service worker ──
+// ── Service worker + update detection ──
+let newWorker = null;
+
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          document.getElementById('updateBanner').classList.remove('hidden');
+        }
+      });
+    });
+  }).catch(() => {});
+
+  // When the new SW takes control, reload to apply update
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+}
+
+function applyUpdate() {
+  if (newWorker) newWorker.postMessage({ action: 'skipWaiting' });
 }
 
 // ── PWA install prompt ──
