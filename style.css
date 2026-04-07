@@ -199,21 +199,75 @@
   align-items: center;
   justify-content: center;
   z-index: 50;
-  padding: 1.5rem;
+  padding: 0;
 }
 .modal-overlay.hidden { display: none; }
 
 .modal-card {
   background: #111827;
-  border: 1px solid #374151;
-  border-radius: 1.5rem;
-  padding: 2.5rem 2rem;
+  border: none;
+  border-radius: 0;
+  padding: 3rem 2rem;
   width: 100%;
-  max-width: 360px;
+  height: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 480px) {
+  .modal-overlay { padding: 1.5rem; }
+  .modal-card {
+    height: auto;
+    border: 1px solid #374151;
+    border-radius: 1.5rem;
+    max-width: 360px;
+  }
+}
+
+/* ── PWA install banner ── */
+.install-banner {
+  width: 100%;
+  max-width: 480px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.install-banner.hidden { display: none; }
+
+.install-banner-text {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  flex: 1;
+}
+
+.install-banner-btn {
+  background: #f59e0b;
+  color: #000;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.install-banner-dismiss {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  line-height: 1;
 }
 
 .modal-btn-end {

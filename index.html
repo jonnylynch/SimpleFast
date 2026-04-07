@@ -36,6 +36,13 @@
     </div>
   </div>
 
+  <!-- PWA install banner (shown only when browser fires beforeinstallprompt) -->
+  <div id="installBanner" class="install-banner hidden">
+    <span class="install-banner-text">Add SimpleFast to your home screen for quick access.</span>
+    <button class="install-banner-btn" onclick="triggerInstall()">Install</button>
+    <button class="install-banner-dismiss" onclick="dismissInstall()" aria-label="Dismiss">✕</button>
+  </div>
+
   <!-- Controls -->
   <div class="w-full max-w-sm flex flex-col gap-3">
     <div class="grid grid-cols-4 gap-2" id="goalButtons">

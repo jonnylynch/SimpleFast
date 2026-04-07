@@ -3,6 +3,33 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
+// ── PWA install prompt ──
+let installPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  installPrompt = e;
+  document.getElementById('installBanner').classList.remove('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBanner').classList.add('hidden');
+  installPrompt = null;
+});
+
+function triggerInstall() {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  installPrompt.userChoice.then(() => {
+    installPrompt = null;
+    document.getElementById('installBanner').classList.add('hidden');
+  });
+}
+
+function dismissInstall() {
+  document.getElementById('installBanner').classList.add('hidden');
+}
+
 // ── Constants ──
 const STORAGE_KEY = 'simplefast_state';
 const CIRCUMFERENCE = 603; // 2 * Math.PI * 96
