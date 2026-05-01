@@ -71,6 +71,7 @@ function dismissIos() {
 
 // ── Constants ──
 const STORAGE_KEY = 'simplefast_state';
+const HISTORY_KEY = 'simplefast_history';
 const CIRCUMFERENCE = 603;
 
 const STATUSES = [
@@ -124,11 +125,33 @@ function loadState() {
 function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
 function clearState() { localStorage.removeItem(STORAGE_KEY); }
 
+function loadHistory() {
+  const raw = localStorage.getItem(HISTORY_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+function appendToHistory(record) {
+  const h = loadHistory();
+  h.push(record);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+}
+
 function formatTime(totalSeconds) {
   const h = Math.floor(totalSeconds / 3600);
   const m = Math.floor((totalSeconds % 3600) / 60);
   const s = totalSeconds % 60;
   return [h, m, s].map(n => String(n).padStart(2, '0')).join(':');
+}
+
+function formatHistoryDate(date) {
+  const today = new Date();
+  const toDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()).toDateString();
+  if (toDay(date) === toDay(today)) return 'Today';
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (toDay(date) === toDay(yesterday)) return 'Yesterday';
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
 }
 
 function formatDuration(totalSeconds) {
@@ -325,6 +348,14 @@ function confirmEndFast() {
   const actualSeconds = Math.max(0, Math.floor((effectiveEndTime - startTime) / 1000));
   const targetSeconds = state.targetHours * 3600;
 
+  appendToHistory({
+    startTime: state.startTime,
+    endTime: new Date(effectiveEndTime).toISOString(),
+    durationSeconds: actualSeconds,
+    targetHours: state.targetHours,
+    stageIndex: getStatusIndex(actualSeconds / 3600),
+  });
+
   // Stop timer and clear state
   clearInterval(tickInterval);
   clearState();
@@ -417,6 +448,55 @@ function updateOffsetLabel(minutes) {
   else if (mins === 0) label = `${h} hr ago`;
   else                 label = `${h} hr ${mins} min ago`;
   document.getElementById('offsetLabel').textContent = label;
+}
+
+// ── History view ──
+const GOAL_LABELS = { 12: '12:12', 14: '14:10', 16: '16:8', 24: '24h' };
+
+function showHistory() {
+  renderHistory();
+  document.getElementById('historyOverlay').classList.remove('hidden');
+}
+
+function hideHistory() {
+  document.getElementById('historyOverlay').classList.add('hidden');
+}
+
+function renderHistory() {
+  const history = loadHistory();
+  const list = document.getElementById('historyList');
+
+  if (history.length === 0) {
+    list.innerHTML = '<p class="text-center text-gray-500 text-sm mt-10 leading-relaxed">No fasts recorded yet.<br>Complete your first fast to see it here.</p>';
+    return;
+  }
+
+  list.innerHTML = '';
+  [...history].reverse().forEach(record => {
+    const date = formatHistoryDate(new Date(record.endTime));
+    const duration = formatDuration(record.durationSeconds);
+    const stage = STATUSES[record.stageIndex];
+    const ratio = record.durationSeconds / (record.targetHours * 3600);
+    const hitGoal = ratio >= 1;
+    const goalText = hitGoal ? '✓' : `${Math.round(ratio * 100)}%`;
+    const hitClass = hitGoal ? 'history-hit-success' : 'history-hit-miss';
+    const goalLabel = GOAL_LABELS[record.targetHours] || `${record.targetHours}h`;
+
+    const el = document.createElement('div');
+    el.className = 'history-entry';
+    el.innerHTML = `
+      <div class="history-entry-top">
+        <span class="history-date">${date}</span>
+        <span class="history-duration">${duration}</span>
+        <span class="history-hit ${hitClass}">${goalText}</span>
+      </div>
+      <div class="history-entry-bottom">
+        <span class="history-goal-label">${goalLabel}</span>
+        <span class="history-stage-label" style="color:${stage.ringColor}">${stage.label}</span>
+      </div>
+    `;
+    list.appendChild(el);
+  });
 }
 
 // ── Init ──
