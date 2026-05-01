@@ -1,4 +1,4 @@
-const CACHE = 'simplefast-v5';
+const CACHE = 'simplefast-v6';
 const ASSETS = [
   '/',
   '/index.html',

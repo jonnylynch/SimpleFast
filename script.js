@@ -475,7 +475,8 @@ function renderHistory() {
   }
 
   list.innerHTML = '';
-  [...history].reverse().forEach(record => {
+  [...history].reverse().forEach((record, reversedIndex) => {
+    const originalIndex = history.length - 1 - reversedIndex;
     const date = formatHistoryDate(new Date(record.endTime));
     const duration = formatDuration(record.durationSeconds);
     const stage = STATUSES[record.stageIndex];
@@ -492,6 +493,7 @@ function renderHistory() {
         <span class="history-date">${date}</span>
         <span class="history-duration">${duration}</span>
         <span class="history-hit ${hitClass}">${goalText}</span>
+        <button onclick="deleteHistoryEntry(${originalIndex})" class="history-delete-btn" aria-label="Delete">✕</button>
       </div>
       <div class="history-entry-bottom">
         <span class="history-goal-label">${goalLabel}</span>
@@ -500,6 +502,13 @@ function renderHistory() {
     `;
     list.appendChild(el);
   });
+}
+
+function deleteHistoryEntry(index) {
+  const h = loadHistory();
+  h.splice(index, 1);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+  renderHistory();
 }
 
 // ── Init ──
