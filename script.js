@@ -310,6 +310,7 @@ function openModal() {
   document.getElementById('ateLabel').textContent = '0 min ago';
   document.getElementById('atePanel').classList.add('hidden');
   document.getElementById('ateChevron').style.transform = '';
+  document.getElementById('saveToHistory').checked = true;
   document.getElementById('confirmModal').classList.remove('hidden');
 }
 
@@ -348,13 +349,15 @@ function confirmEndFast() {
   const actualSeconds = Math.max(0, Math.floor((effectiveEndTime - startTime) / 1000));
   const targetSeconds = state.targetHours * 3600;
 
-  appendToHistory({
-    startTime: state.startTime,
-    endTime: new Date(effectiveEndTime).toISOString(),
-    durationSeconds: actualSeconds,
-    targetHours: state.targetHours,
-    stageIndex: getStatusIndex(actualSeconds / 3600),
-  });
+  if (document.getElementById('saveToHistory').checked) {
+    appendToHistory({
+      startTime: state.startTime,
+      endTime: new Date(effectiveEndTime).toISOString(),
+      durationSeconds: actualSeconds,
+      targetHours: state.targetHours,
+      stageIndex: getStatusIndex(actualSeconds / 3600),
+    });
+  }
 
   // Stop timer and clear state
   clearInterval(tickInterval);

@@ -148,6 +148,10 @@
             oninput="updateAteLabel(this.value)" class="offset-slider w-full" />
         </div>
       </div>
+      <label class="flex items-center justify-between w-full cursor-pointer select-none mb-5 px-1">
+        <span class="text-sm text-gray-400">Save to history</span>
+        <input type="checkbox" id="saveToHistory" checked class="w-5 h-5 cursor-pointer accent-amber-400">
+      </label>
       <button onclick="confirmEndFast()" class="modal-btn-end">Yes, end it</button>
       <button onclick="closeModal()" class="modal-btn-cancel">Keep going</button>
     </div>
