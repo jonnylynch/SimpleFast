@@ -210,6 +210,7 @@ function updateUI(elapsedSeconds, targetHours, isActive) {
 
   document.getElementById('timerDisplay').textContent = formatTime(elapsedSeconds);
   document.getElementById('goalLabel').textContent = isActive ? `Goal: ${targetHours}h` : 'No active fast';
+  document.getElementById('goalHint').classList.toggle('hidden', isActive);
 
   const ring = document.getElementById('progressRing');
   ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
@@ -429,6 +430,7 @@ function init() {
       btn.classList.toggle('active', parseInt(btn.dataset.hours) === selectedGoal);
     });
     document.getElementById('offsetRow').classList.add('collapsed');
+    document.getElementById('goalHint').classList.add('hidden');
     tickInterval = setInterval(tick, 1000);
     tick();
   } else {
