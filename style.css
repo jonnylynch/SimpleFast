@@ -494,3 +494,51 @@
   transition: color 0.2s;
 }
 .history-delete-btn:hover { color: #ef4444; }
+
+.history-entry-deleting {
+  border-color: #ef4444 !important;
+  background: #1c0a0a;
+}
+
+.history-confirm-delete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.history-confirm-label {
+  font-size: 0.9rem;
+  color: #d1d5db;
+  font-weight: 500;
+}
+
+.history-confirm-btns {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.history-confirm-cancel {
+  flex: 1;
+  padding: 0.55rem;
+  border-radius: 0.625rem;
+  background: #1f2937;
+  color: #9ca3af;
+  border: 1px solid #374151;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.history-confirm-yes {
+  flex: 1;
+  padding: 0.55rem;
+  border-radius: 0.625rem;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}

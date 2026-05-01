@@ -488,12 +488,13 @@ function renderHistory() {
 
     const el = document.createElement('div');
     el.className = 'history-entry';
+    el.id = `history-entry-${originalIndex}`;
     el.innerHTML = `
       <div class="history-entry-top">
         <span class="history-date">${date}</span>
         <span class="history-duration">${duration}</span>
         <span class="history-hit ${hitClass}">${goalText}</span>
-        <button onclick="deleteHistoryEntry(${originalIndex})" class="history-delete-btn" aria-label="Delete">✕</button>
+        <button onclick="confirmDeleteEntry(${originalIndex})" class="history-delete-btn" aria-label="Delete">✕</button>
       </div>
       <div class="history-entry-bottom">
         <span class="history-goal-label">${goalLabel}</span>
@@ -502,6 +503,20 @@ function renderHistory() {
     `;
     list.appendChild(el);
   });
+}
+
+function confirmDeleteEntry(index) {
+  const el = document.getElementById(`history-entry-${index}`);
+  el.classList.add('history-entry-deleting');
+  el.innerHTML = `
+    <div class="history-confirm-delete">
+      <span class="history-confirm-label">Delete this fast?</span>
+      <div class="history-confirm-btns">
+        <button onclick="renderHistory()" class="history-confirm-cancel">Keep it</button>
+        <button onclick="deleteHistoryEntry(${index})" class="history-confirm-yes">Delete</button>
+      </div>
+    </div>
+  `;
 }
 
 function deleteHistoryEntry(index) {
