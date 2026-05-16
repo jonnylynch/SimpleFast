@@ -454,7 +454,7 @@ function updateOffsetLabel(minutes) {
 }
 
 // ── History view ──
-const GOAL_LABELS = { 12: '12:12', 14: '14:10', 16: '16:8', 24: '24h' };
+const GOAL_LABELS = { 14: '14:10', 16: '16:8', 18: '18:6', 24: '24h' };
 
 function showHistory() {
   renderHistory();
